@@ -18,6 +18,7 @@ package com.wasteofplastic.askyblock.listeners;
 import java.util.List;
 import java.util.UUID;
 
+import kr.msleague.bgmsync.bukkit.event.PlayerProxyJoinEvent;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -53,11 +54,11 @@ public class JoinLeaveEvents implements Listener {
      * @param event
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onPlayerJoin(final PlayerJoinEvent event) {
+    public void onPlayerJoin(final PlayerProxyJoinEvent event) {
         if (DEBUG)
             plugin.getLogger().info("DEBUG: on PlayerJoin");
-        final Player player = event.getPlayer();
-        final UUID playerUUID = player.getUniqueId();
+      //  final Player player = event.getPlayer();
+        final UUID playerUUID = event.getUuid();
         if (DEBUG)
             plugin.getLogger().info("DEBUG: got player UUID");
         if (playerUUID == null) {

@@ -155,21 +155,15 @@ public class ChatListener implements Listener {
         }
     }
 
-    private void teamChat(final AsyncPlayerChatEvent event, String message) {
-        Player player = event.getPlayer();
-        UUID playerUUID = player.getUniqueId();
-        //Bukkit.getLogger().info("DEBUG: post: " + message);
-        // Is team chat on for this player
-        // Find out if this player is in a team (should be if team chat is on)
-        // TODO: remove when player resets or leaves team
+    public void teamChat(UUID playerUUID, String message, String playerName){
         if (plugin.getPlayers().inTeam(playerUUID)) {
-            List<UUID> teamMembers = plugin.getPlayers().getMembers(player.getUniqueId());
+            List<UUID> teamMembers = plugin.getPlayers().getMembers(playerUUID);
             // Tell only the team members if they are online
             boolean onLine = false;
             if (Settings.chatIslandPlayer.isEmpty()) {
                 message = plugin.myLocale(playerUUID).teamChatPrefix + message;
             } else {
-                message = plugin.myLocale(playerUUID).teamChatPrefix.replace(Settings.chatIslandPlayer,player.getDisplayName()) + message;
+                message = plugin.myLocale(playerUUID).teamChatPrefix.replace(Settings.chatIslandPlayer, playerName) + message;
             }
             for (UUID teamMember : teamMembers) {
                 Player teamPlayer = plugin.getServer().getPlayer(teamMember);
@@ -191,16 +185,26 @@ public class ChatListener implements Listener {
                 if(Settings.logTeamChat) plugin.getLogger().info(ChatColor.stripColor(message));
             }
             if (!onLine) {
-                Util.sendMessage(player, ChatColor.RED + plugin.myLocale(playerUUID).teamChatNoTeamAround);
-                Util.sendMessage(player, ChatColor.RED + plugin.myLocale(playerUUID).teamChatStatusOff);
+                Util.sendMessage(playerUUID, ChatColor.RED + plugin.myLocale(playerUUID).teamChatNoTeamAround);
+                Util.sendMessage(playerUUID, ChatColor.RED + plugin.myLocale(playerUUID).teamChatStatusOff);
                 teamChatUsers.remove(playerUUID);
             }
         } else {
-            Util.sendMessage(player, ChatColor.RED + plugin.myLocale(playerUUID).teamChatNoTeamAround);
-            Util.sendMessage(player, ChatColor.RED + plugin.myLocale(playerUUID).teamChatStatusOff);
+            Util.sendMessage(playerUUID, ChatColor.RED + plugin.myLocale(playerUUID).teamChatNoTeamAround);
+            Util.sendMessage(playerUUID, ChatColor.RED + plugin.myLocale(playerUUID).teamChatStatusOff);
             // Not in a team any more so delete
             teamChatUsers.remove(playerUUID);
         }
+    }
+
+    private void teamChat(final AsyncPlayerChatEvent event, String message) {
+        Player player = event.getPlayer();
+        UUID playerUUID = player.getUniqueId();
+        //Bukkit.getLogger().info("DEBUG: post: " + message);
+        // Is team chat on for this player
+        // Find out if this player is in a team (should be if team chat is on)
+        // TODO: remove when player resets or leaves team
+        teamChat(playerUUID, message, player.getDisplayName());
     }
 
     /**

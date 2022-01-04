@@ -226,6 +226,7 @@ public class PlayerEvents implements Listener {
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerJoin(final PlayerJoinEvent event) {
+        //섬에 있으면
         final Island island = plugin.getGrid().getProtectedIslandAt(event.getPlayer().getLocation());
         if (island != null) {
             processPerms(event.getPlayer(), island);

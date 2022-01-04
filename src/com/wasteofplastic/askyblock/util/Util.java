@@ -27,10 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.bukkit.Bukkit;
@@ -418,6 +415,17 @@ public final class Util {
     public static void sendMessage(CommandSender sender, String message) {
         if (!ChatColor.stripColor(message).trim().isEmpty()) {
             sender.sendMessage(message);
+        }
+    }
+
+    public static void sendMessage(UUID sender, String message) {
+        if (!ChatColor.stripColor(message).trim().isEmpty()) {
+            Player onlinePlayer = Bukkit.getPlayer(sender);
+            if(onlinePlayer != null && onlinePlayer.isOnline()){
+                onlinePlayer.sendMessage(message);
+            }else{
+
+            }
         }
     }
 
